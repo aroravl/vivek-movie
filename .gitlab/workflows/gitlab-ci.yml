@@ -29,6 +29,6 @@ jobs:
         pip install pipenv
         pip install flake8
 
-      - name: Run the linter
-        run: cd starter/backend && pipenv run lint
+    - name: Run the linter
+      run: cd starter/backend && pipenv run lint
 
