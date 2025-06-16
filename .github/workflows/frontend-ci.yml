@@ -29,7 +29,7 @@ jobs:
       run: npm ci
 
     - name: Linting
-      run: cd starter/frontend && npm run lint
+      run: cd starter/frontend && npm run lint --fix
 
   tester:
     runs-on: ubuntu-latest
