@@ -21,7 +21,7 @@ on:
 
 
 jobs:
-  Linting:
+  lint:
     runs-on: ubuntu-latest
     
     steps:
@@ -43,7 +43,7 @@ jobs:
     - name: Run the linter
       run: cd starter/backend && pipenv run lint
 
-  Test:
+  test:
     runs-on: ubuntu-latest
 
     steps:
@@ -65,3 +65,15 @@ jobs:
     - name: Run Test
       run: cd starter/backend && pipenv install pytest && pipenv run test
 
+  buildjob:
+    needs: [linting, test]
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v3
+
+    - name: Build Docker Image
+      run: |
+        cd starter/backend
+        docker build --tag mp-backend:latest .
