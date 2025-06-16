@@ -1,13 +1,23 @@
 name: Backend CI Workflow
 
+# Triggers for the workflow
 on:
+  # Manual trigger using the workflow_dispatch event
   workflow_dispatch:
-  pull_request:
-    branches:
-      - main
+
+  # Automatic trigger on push events to the main branch
   push:
     branches:
       - main
+
+  # Automatic trigger on pull request events targeting the main branch
+  pull_request:
+    branches:
+      - main
+
+  # Scheduled trigger at 5:00 AM UTC, Monday through Friday
+  schedule:
+    - cron: '0 5 * * 1-5'
 
 jobs:
   Linting:
