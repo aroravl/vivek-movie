@@ -9,7 +9,7 @@ on:
       - "starter/backend/**"
   workflow_dispatch:
 
-  jobs:
+jobs:
   Linting:
     runs-on: ubuntu-latest
     
