@@ -76,4 +76,4 @@ jobs:
     - name: Build docker image
       run: |
         cd starter/backend
-        docker build --tag backend:latest .
+        docker build --tag viv-backend:latest .
