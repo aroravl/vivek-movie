@@ -82,13 +82,13 @@ jobs:
         aws-region: us-east-1
 
     - name: Build, tag, and push image to Amazon ECR
-        id: build-image
-        env:
-          AWS_ACCOUNT_ID: 787185224543
-          ECR_REGISTRY: ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com
-          IMAGE_TAG: ${{ env.GITHUB_SHA }}
-          IMAGE_REPO_NAME: backend
-        run: |
-          cd starter/backend 
-          docker build -t ${{ env.BACKEND_ECR_REPOSITORY }}:$IMAGE_TAG .
-          docker push ${{ env.BACKEND_ECR_REPOSITORY }}:$IMAGE_TAG
+      id: build-image
+      env:
+        AWS_ACCOUNT_ID: 787185224543
+        ECR_REGISTRY: ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com
+        IMAGE_TAG: ${{ env.GITHUB_SHA }}
+        IMAGE_REPO_NAME: backend
+      run: |
+        cd starter/backend 
+        docker build -t ${{ env.BACKEND_ECR_REPOSITORY }}:$IMAGE_TAG .
+        docker push ${{ env.BACKEND_ECR_REPOSITORY }}:$IMAGE_TAG
