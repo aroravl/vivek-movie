@@ -53,7 +53,7 @@ jobs:
 
 
   buildjob:
-    needs: [lint, test]
+    needs: [linter, tester]
     runs-on: ubuntu-latest
     environment: VivekEnv
     
