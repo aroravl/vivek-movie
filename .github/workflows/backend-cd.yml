@@ -93,6 +93,8 @@ jobs:
       env:
         BACKEND_ECR_REPO: 787185224543.dkr.ecr.us-east-1.amazonaws.com/backend
       run: |
+        aws eks update-kubeconfig --name cluster --region us-east-1
+        kubectl get svc
         cd starter/backend 
         docker build -t ${BACKEND_ECR_REPO}:${{ github.sha }} .
         docker push ${BACKEND_ECR_REPO}:${{ github.sha }}

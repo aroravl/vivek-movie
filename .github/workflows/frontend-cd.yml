@@ -51,6 +51,16 @@ jobs:
     - name: Testing
       run: cd starter/frontend && npm run test
 
+
+  buildjob:
+    needs: [lint, test]
+    runs-on: ubuntu-latest
+    environment: VivekEnv
+    
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v3      
+
     - name: Config AWS creds
       uses: aws-actions/configure-aws-credentials@v2
       with:
@@ -68,6 +78,8 @@ jobs:
         FRONTEND_ECR_REPO: 787185224543.dkr.ecr.us-east-1.amazonaws.com/frontend
         IMAGE_TAG: ${{ env.GITHUB_SHA }}        
       run: |
+        aws eks update-kubeconfig --name cluster --region us-east-1
+        kubectl get svc
         cd starter/frontend 
         docker build -t ${FRONTEND_ECR_REPO}:${{ github.sha }} .
         docker push ${FRONTEND_ECR_REPO}:${{ github.sha }}
