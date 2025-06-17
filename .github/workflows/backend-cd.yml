@@ -88,22 +88,19 @@ jobs:
       id: login-ecr
       uses: aws-actions/amazon-ecr-login@v2
 
-    - name: Build, tag, and push image to Amazon ECR
+    - name: Build and Push to ECR Backend
       id: build-image
       env:
         BACKEND_ECR_REPO: 787185224543.dkr.ecr.us-east-1.amazonaws.com/backend
-        IMAGE_TAG: ${{ env.GITHUB_SHA }}        
       run: |
         cd starter/backend 
         docker build -t ${BACKEND_ECR_REPO}:${{ github.sha }} .
         docker push ${BACKEND_ECR_REPO}:${{ github.sha }}
 
 
-    - name: Deploy
+    - name: Deploy Backend
       working-directory: starter/backend/k8s
       env:
-        IMAGE_TAG: latest
-        REPO_NAME: backend
         BACKEND_ECR_REPO: 787185224543.dkr.ecr.us-east-1.amazonaws.com/backend
       run: |
         aws eks update-kubeconfig --name cluster --region us-east-1

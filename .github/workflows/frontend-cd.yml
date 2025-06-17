@@ -1,0 +1,84 @@
+name: Front CD Workflow
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main  
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  linter:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: checkout repo
+      uses: actions/checkout@v3
+
+    - name: UseNodeJS
+      uses: actions/setup-node@v3
+      with:
+        node-version: 18
+        cache: 'npm'
+        cache-dependency-path: starter/frontend/package-lock.json
+
+    - name: Inst deps
+      working-directory: starter/frontend
+      run: npm ci
+
+    - name: Linting
+      run: cd starter/frontend && npm run lint -- --fix
+
+  tester:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: checkout repo
+      uses: actions/checkout@v3
+
+    - name: UseNodeJS
+      uses: actions/setup-node@v3
+      with:
+        node-version: 18
+        cache: 'npm'
+        cache-dependency-path: starter/frontend/package-lock.json
+    - name: Inst deps
+      working-directory: starter/frontend
+      run: npm ci
+  
+    - name: Testing
+      run: cd starter/frontend && npm run test
+
+    - name: Config AWS creds
+      uses: aws-actions/configure-aws-credentials@v2
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-east-1
+
+    - name: Login
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v2
+
+    - name: Build and Push to ECR FRONTEND
+      id: build-image
+      env:
+        FRONTEND_ECR_REPO: 787185224543.dkr.ecr.us-east-1.amazonaws.com/frontend
+        IMAGE_TAG: ${{ env.GITHUB_SHA }}        
+      run: |
+        cd starter/frontend 
+        docker build -t ${FRONTEND_ECR_REPO}:${{ github.sha }} .
+        docker push ${FRONTEND_ECR_REPO}:${{ github.sha }}
+
+    - name: Deploy FrontEnd
+      working-directory: starter/frontend/k8s
+      env:
+        FRONTEND_ECR_REPO: 787185224543.dkr.ecr.us-east-1.amazonaws.com/frontend
+      run: |
+        aws eks update-kubeconfig --name cluster --region us-east-1
+        kustomize edit set image ${FRONTEND_ECR_REPO}:${{ github.sha }}
+        kustomize build | kubectl apply -f -
+
+
