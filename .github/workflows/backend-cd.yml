@@ -61,6 +61,8 @@ jobs:
       run:  |
         python -m pip install --upgrade pip
         pip install flake8 pipenv
+        echo Printing ENV
+        env
         
 
     - name: Run Test
