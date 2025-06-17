@@ -71,6 +71,7 @@ jobs:
   buildjob:
     needs: [lint, test]
     runs-on: ubuntu-latest
+    environment: VivekEnv
     
     steps:
     - name: Checkout repo
