@@ -92,5 +92,5 @@ jobs:
         IMAGE_REPO_NAME: backend
       run: |
         cd starter/backend 
-        docker build -t ${BACKEND_ECR_REPO}:$IMAGE_TAG .
-        docker push ${BACKEND_ECR_REPO}:$IMAGE_TAG
+        docker build -t ${BACKEND_ECR_REPO}:${{ github.sha }} .
+        docker push ${BACKEND_ECR_REPO}:${{ github.sha }}
