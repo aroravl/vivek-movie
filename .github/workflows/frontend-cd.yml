@@ -81,7 +81,7 @@ jobs:
         aws eks update-kubeconfig --name cluster --region us-east-1
         kubectl get svc
         cd starter/frontend 
-        docker build -t ${FRONTEND_ECR_REPO}:${{ github.sha }} .
+        docker build --build-arg=REACT_APP_MOVIE_API_URL=${{ secrets.API_URL }} -t ${FRONTEND_ECR_REPO}:${{ github.sha }} .
         docker push ${FRONTEND_ECR_REPO}:${{ github.sha }}
 
     - name: Deploy FrontEnd
